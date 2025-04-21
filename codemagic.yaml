@@ -5,7 +5,6 @@ workflows:
     instance_type: mac_mini 
     environment:
       JAVA_HOME: "${JAVA_HOME}"  
-     # JAVA_HOME: "/opt/android/java/openjdk17" # ONLY if Codemagic docs say this is correct!
       xcode: latest
     scripts:
       - name: Debug JAVA_HOME
