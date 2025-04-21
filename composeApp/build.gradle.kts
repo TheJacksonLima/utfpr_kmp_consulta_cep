@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -61,6 +60,14 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
         }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test")) // kotlin.test.*
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.mock)
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -98,5 +105,7 @@ android {
 dependencies {
     implementation(libs.androidx.material3.android)
     debugImplementation(compose.uiTooling)
+    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
 }
 
