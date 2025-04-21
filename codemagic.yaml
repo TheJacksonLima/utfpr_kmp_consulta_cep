@@ -8,8 +8,8 @@ workflows:
         script: chmod +x ./gradlew
 
       - name: Build Android app
-        script: ./gradlew :androidApp:assembleDebug
-
+        script: ./gradlew :androidApp:composeApp:assembleDebug
+                
       - name: Run tests
         script: ./gradlew test
 
