@@ -1,37 +1,15 @@
 workflows:
-  kmp-android-workflow:
-    name: Kotlin Multiplatform - Android Build
-    max_build_duration: 60
+  kmp-default:
+    name: KMP Android Default Workflow
     environment:
-      vars:
-        PACKAGE_NAME: "com.seuapp.kmp"
-        JAVA_VERSION: 17
-      android_signing:
-        - your_keystore_reference  # você configura isso nas Configurações do Codemagic
-      groups:
-        - google_credentials  # se precisar publicar na Play Store
-    triggering:
-      events:
-        - push
-        - pull_request
-      branch_patterns:
-        - pattern: "*"
-          include: true
-          source: true
+      java: 17
     scripts:
-      - name: Configurar Java
-        script: |
-          sdk install java $JAVA_VERSION
-          sdk use java $JAVA_VERSION
+      - name: Build Android app
+        script: ./gradlew :androidApp:assembleDebug
 
-      - name: Build do projeto KMP para Android
-        script: |
-          ./gradlew :androidApp:assembleRelease
-
-      - name: Testes unitários
-        script: |
-          ./gradlew test
+      - name: Run tests
+        script: ./gradlew test
 
     artifacts:
-      - build/outputs/**/*.apk
-      - build/outputs/**/*.aab
+      - androidApp/build/outputs/**/*.apk
+      - androidApp/build/outputs/**/*.aab
