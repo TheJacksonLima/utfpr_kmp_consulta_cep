@@ -4,6 +4,9 @@ workflows:
     environment:
       java: 17
     scripts:
+      - name: Permitir execução do Gradle Wrapper
+        script: chmod +x ./gradlew
+
       - name: Build Android app
         script: ./gradlew :androidApp:assembleDebug
 
