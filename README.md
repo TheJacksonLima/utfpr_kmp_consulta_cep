@@ -52,5 +52,6 @@ Este é um aplicativo Android desenvolvido como parte da especialização em Dis
 
 ## Observações
 - Para simular um erro, entre com o código "11111111" no campo de CEP.
+- Aplicativo também está disponivel no [github](https://github.com/TheJacksonLima/utfpr_kmp_consulta_cep?tab=readme-ov-file)
 
 
