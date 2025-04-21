@@ -8,11 +8,11 @@ workflows:
         script: chmod +x ./gradlew
 
       - name: Build Android app
-        script: ./gradlew :androidApp:composeApp:assembleDebug
-                
+        script: ./gradlew :composeApp:assembleDebug
+
       - name: Run tests
         script: ./gradlew test
 
     artifacts:
-      - androidApp/build/outputs/**/*.apk
-      - androidApp/build/outputs/**/*.aab
+      - composeApp/build/outputs/**/*.apk
+      - composeApp/build/outputs/**/*.aab
