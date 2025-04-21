@@ -1,52 +1,37 @@
 workflows:
-  kmp-build:
-    name: KMP Build
-    max_build_duration: 120 # KMP builds can take longer
-    instance_type: mac_mini # Or your preferred instance type
-
-    # No explicit JAVA_HOME unless ABSOLUTELY necessary
+  kmp-android-workflow:
+    name: Kotlin Multiplatform - Android Build
+    max_build_duration: 60
     environment:
-      xcode: latest
-
+      vars:
+        PACKAGE_NAME: "com.seuapp.kmp"
+        JAVA_VERSION: 17
+      android_signing:
+        - your_keystore_reference  # você configura isso nas Configurações do Codemagic
+      groups:
+        - google_credentials  # se precisar publicar na Play Store
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch_patterns:
+        - pattern: "*"
+          include: true
+          source: true
     scripts:
-      - name: Set up Gradle Cache (Optional, but HIGHLY recommended)
+      - name: Configurar Java
         script: |
-          mkdir -p $HOME/.gradle/caches/modules-2/files-2.1
-          chmod -R a+w $HOME/.gradle/caches/modules-2
+          sdk install java $JAVA_VERSION
+          sdk use java $JAVA_VERSION
 
-      - name: Show system info
+      - name: Build do projeto KMP para Android
         script: |
-          #!/bin/bash
-          echo "Codemagic Environment Info:"
-          echo "OS: $(uname -s) $(uname -r) $(uname -m)"
-          echo "Java Version:"
-          java -version
-          echo "Gradle Version:"
-          ./gradlew --version
-          echo "Kotlin Version:"
-          ./gradlew kotlinVersion
+          ./gradlew :androidApp:assembleRelease
 
-      - name: Clean and Validate Gradle Wrapper
+      - name: Testes unitários
         script: |
-          ./gradlew clean build -m --write-locks # Clean, build, module-wise, write lock
-          ./gradlew dependencies --write-locks # Check dependencies
-          ./gradlew buildEnvironment # Debug build environment
-
-      - name: Run KMP Tests
-        script: ./gradlew allTests
-
-      - name: Build Android APK
-        script: ./gradlew assembleRelease
-
-      - name: Build iOS Framework
-        script: ./gradlew :shared:assembleReleaseFramework # More specific task
+          ./gradlew test
 
     artifacts:
-      - build/**/outputs/**/*.apk
-      - shared/build/outputs/iosArm64/release/*.framework
-      - shared/build/outputs/iosX64/release/*.framework # Include x86_64 for simulators
-
-    cache:
-      paths:
-        - $HOME/.gradle/caches/modules-2/files-2.1
-        - $HOME/.gradle/caches/transforms-3
+      - build/outputs/**/*.apk
+      - build/outputs/**/*.aab
